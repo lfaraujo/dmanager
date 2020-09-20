@@ -2,13 +2,16 @@ import os
 
 
 def obter_nome_antigo(filename):
-    print("[Obtendo nome do item...]")
+    nome_antigo_padrao = "padrão"
 
     dict_itens_old = {"digimon_2020": "digimon_adventure_2020_ep_", "maou_gakuin": "maou_gakuin_no_futekigousha_"}
 
     for item in dict_itens_old:
         if dict_itens_old[item][0:10] == filename[0:10]:
+            print("[Obtendo nome do item...]")
             return dict_itens_old[item]
+
+    return nome_antigo_padrao
 
 
 def obter_nome_novo(old_filename):
@@ -40,7 +43,8 @@ def renomear_arquivos(diretorio):
 
                 full_new_name = nome_novo + old_filename_ep + extension
 
-                os.rename(file, filename.replace(filename, full_new_name))
+                os.rename(os.path.join(diretorio, file), os.path.join(diretorio, full_new_name))
+
                 print("\n[O arquivo %s foi renomeado para %s]" % (filename, filename.replace(filename, full_new_name)))
                 qtd_arquivos += 1
 
