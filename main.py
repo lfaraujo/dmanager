@@ -5,7 +5,7 @@ from file_renamer.rename_files import renomear_arquivos
 app = Flask(__name__)
 
 
-@app.route('/api/local-management/files/rename', methods=['GET'])
+@app.route('/files/rename', methods=['GET'])
 def local_file_rename():
     headers = {"Content-Type": "application/json"}
 
