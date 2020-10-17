@@ -1,40 +1,43 @@
 import boto3
 
+from config.aws_config import AWS_CONFIG
+
 s3_client = boto3.client('s3')
 
 
-# def generate_random_filename(file_name):
-#     random_file_name = ''.join([str(uuid.uuid4().hex[:6]), file_name])
-#     return random_file_name
+def upload_file(file_name, file_content):
+    s3_client.put_object(Bucket=AWS_CONFIG['bucket_name'], Key=file_name, Body=file_content)
+
+    return {'file_uploaded': file_name}
 
 
-def upload_file(bucket_name, file_name, file_content):
-    s3_client.put_object(Bucket=bucket_name, Key=file_name, Body=file_content)
-
-
-def download_file(bucket_name, file_key, file_name):
-    with open('/tmp/%s' % file_name, 'wb') as data:
-        s3_client.download_fileobj(bucket_name, file_key, data)
+def download_file(file_key, directory):
+    with open('%s%s' % (directory, file_key), 'wb') as data:
+        s3_client.download_fileobj(AWS_CONFIG['bucket_name'], file_key, data)
 
     data.close()
 
+    return {'file_downloaded': file_key}
 
-def list_objects(bucket_name):
-    objects_list = s3_client.list_objects(Bucket=bucket_name)['Contents']
+
+def list_objects():
+    objects_list = s3_client.list_objects(Bucket=AWS_CONFIG['bucket_name'])['Contents']
 
     for item in objects_list:
         print("Chave: {}".format(item['Key']))
 
 
-def check_object(bucket_name, file_key):
-    objects_list = s3_client.list_objects(Bucket=bucket_name)['Contents']
+def check_object(file_key):
+    objects_list = s3_client.list_objects(Bucket=AWS_CONFIG['bucket_name'])['Contents']
 
     for item in objects_list:
         if item['Key'] == file_key:
-            print("Item encontrado!")
+            return True
+
+    return False
 
 
-def get_object_info(bucket_name, file_key):
-    object_info = s3_client.get_object(Bucket=bucket_name, Key=file_key)
+def get_object_info(file_key):
+    object_info = s3_client.get_object(Bucket=AWS_CONFIG['bucket_name'], Key=file_key)
 
     print(object_info)
