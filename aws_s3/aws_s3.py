@@ -1,3 +1,5 @@
+import json
+
 import boto3
 
 from config.aws_config import AWS_CONFIG
@@ -21,10 +23,10 @@ def download_file(file_key, directory):
 
 
 def list_objects():
-    objects_list = s3_client.list_objects(Bucket=AWS_CONFIG['bucket_name'])['Contents']
+    objects_list = s3_client.list_objects(Bucket=AWS_CONFIG['bucket_name'])
 
-    for item in objects_list:
-        print("Chave: {}".format(item['Key']))
+    if 'Contents' in objects_list:
+        return json.dumps([{'item_key': item['Key']} for item in objects_list['Contents']])
 
 
 def check_object(file_key):

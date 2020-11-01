@@ -1,6 +1,6 @@
 from flask import Flask, make_response, request
 
-from aws_s3.aws_s3 import download_file, check_object, upload_file
+from aws_s3.aws_s3 import download_file, check_object, upload_file, list_objects
 from file_renamer.rename_files import renomear_arquivos
 
 app = Flask(__name__)
@@ -51,6 +51,17 @@ def upload_to_aws():
 
     return make_response(
         upload_file(request.form['file_key'], request.files['file']),
+        200,
+        headers
+    )
+
+
+@app.route('/files/list', methods=['GET'])
+def list_bucket_objects():
+    headers = {"Content-Type": "application/json"}
+
+    return make_response(
+        list_objects(),
         200,
         headers
     )
